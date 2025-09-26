@@ -4,49 +4,49 @@ import React from 'react'
 const cardContent = [
   {
     description: "“Lorem ipsum is placeholder text used in design.”",
-    image: "bg-[#ffffff]",
+    image: "bg-[#d0d0d0] dark:bg-[#424242]",
     name: "Abdessamad",
     title: "Software Eng",
     delay: "delay-[calc(50s/7*(7-1)*-1)]",
   },
   {
     description: "“Lorem ipsum is placeholder text used in design.”",
-    image: "bg-[#ffffff]",
+    image: "bg-[#d0d0d0] dark:bg-[#424242]",
     name: "Abdessamad",
     title: "Software Eng",
     delay: "delay-[calc(50s/7*(7-2)*-1)]",
   },
   {
     description: "“Lorem ipsum is placeholder text used in design.”",
-    image: "bg-[#ffffff]",
+    image: "bg-[#d0d0d0] dark:bg-[#424242]",
     name: "Abdessamad",
     title: "Software Eng",
     delay: "delay-[calc(50s/7*(7-3)*-1)]",
   },
   {
     description: "“Lorem ipsum is placeholder text used in design.”",
-    image: "bg-[#ffffff]",
+    image: "bg-[#d0d0d0] dark:bg-[#424242]",
     name: "Abdessamad",
     title: "Software Eng",
     delay: "delay-[calc(50s/7*(7-4)*-1)]",
   },
   {
     description: "“Lorem ipsum is placeholder text used in design.”",
-    image: "bg-[#ffffff]",
+    image: "bg-[#d0d0d0] dark:bg-[#424242]",
     name: "Abdessamad",
     title: "Software Eng",
     delay: "delay-[calc(50s/7*(7-5)*-1)]",
   },
   {
     description: "“Lorem ipsum is placeholder text used in design.”",
-    image: "bg-[#ffffff]",
+    image: "bg-[#d0d0d0] dark:bg-[#424242]",
     name: "Abdessamad",
     title: "Software Eng",
     delay: "delay-[calc(50s/7*(7-6)*-1)]",
   },
   {
     description: "“Lorem ipsum is placeholder text used in design.”",
-    image: "bg-[#ffffff]",
+    image: "bg-[#d0d0d0] dark:bg-[#424242]",
     name: "Abdessamad",
     title: "Software Eng",
     delay: "delay-[calc(50s/7*(7-7)*-1)]",
@@ -61,7 +61,7 @@ const Customerssection = () => {
         </div>
         <div className='wrapper'>
           {cardContent.map(({description, image, name, title, delay}, index) => (
-            <div key={index} className={`marqueecard ${delay} rounded-4xl p-6 flex flex-col justify-between w-[20rem] h-[21rem] bg-[#f0f0f0] dark:bg-[#292929]`}>
+            <div key={index} className={`marqueecard ${delay} rounded-4xl p-6 flex flex-col justify-between w-[20rem] h-[21rem] border border-[#d0d0d0] dark:border-[#424242]`}>
               <div className='md:text-2xl opacity-70'>
                 {description}
               </div>

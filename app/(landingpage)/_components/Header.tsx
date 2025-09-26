@@ -13,7 +13,7 @@ const Header = () => {
             <Image className='' height={40} src={logo} alt='shortlink'/>
             <div className='flex gap-0 items-center'>
                 <ModeToggle/>
-                <Button title='Try ShortLink' />
+                <Button title='Try ShortLink' redirectedRoute="/signup" />
             </div>
         </div>
     </header>

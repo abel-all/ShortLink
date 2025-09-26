@@ -1,17 +1,24 @@
+import Link from 'next/link';
 import React from 'react'
+import ButtonContent from './ButtonContent';
 
 interface Props {
     title: string;
     wfull?: string;
+    redirectedRoute?: string;
 }
 
-const Button = ({title, wfull="px-8"}: Props) => {
+const Button = ({title, wfull="px-8", redirectedRoute}: Props) => {
   return (
-    <button className={`${wfull} cursor-pointer rounded-full h-12 flex overflow-hidden justify-center items-center bg-[var(--main-color)] hover:bg-[var(--main-color)]/90 duration-300`}>
-        <div className='md:text-[1.125rem] text-[calc((0.8*1.125rem)] font-[500] dark:text-black text-white'>
-            {title}
-        </div>
-    </button>
+    <>
+      {redirectedRoute ? 
+        <Link href={redirectedRoute}>
+          <ButtonContent title={title} wfull={wfull}/>
+        </Link> :
+        <ButtonContent title={title} wfull={wfull}/>
+      }
+
+    </>
   )
 }
 
