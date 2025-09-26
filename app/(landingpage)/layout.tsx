@@ -8,7 +8,7 @@ interface props {
 
 const LandingPageLayout = ({ children }: props) => {
   return (
-    <div className='tracking-tight leading-21'>
+    <div className='tracking-tight leading-21 font-sans'>
         <Header />
         {children}
         <Footer />

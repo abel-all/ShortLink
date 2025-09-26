@@ -148,7 +148,6 @@ body {
   display: inline-block;
   transform-origin: center;
   animation: spin 10s linear infinite;
-  /* will-change: transform; */
 }
 
 .text-animated {
