@@ -21,7 +21,7 @@ interface Props extends LucideProps {
 
 const CustomPlanCard = ({title, description, oldPrice, price, everythingTitle, benefitsObject, isFreePlan}: Props) => {
   return (
-    <div className="w-full max-w-96 h-[832px] border border-[#d0d0d0] dark:border-[#424242] rounded-4xl px-8 py-10">
+    <div className="w-full max-w-96 h-[832px] border border-[var(--border-color-white)] dark:border-[var(--border-color-dark)] rounded-4xl px-8 py-10">
             <div className='flex flex-col gap-7'>
               <div className='flex flex-col gap-2'>
                 <div className="title md:text-3xl font-medium">{title}</div>
@@ -38,7 +38,7 @@ const CustomPlanCard = ({title, description, oldPrice, price, everythingTitle, b
                 }
               </div>
               <div className="call-to-action-btn">
-                <Button title="Get started" wfull="w-full" />
+                <Button title="Get started" wfull="w-full" redirectedRoute="/signup" version="redirect" />
               </div>
               <div className={`flex flex-col pb-10 ${isFreePlan ? "mt-[29px]" : ""}`}>
                 {!isFreePlan && <div className='flex items-center gap-4'>
@@ -46,8 +46,8 @@ const CustomPlanCard = ({title, description, oldPrice, price, everythingTitle, b
                   <div className='text-lg font-medium'>{everythingTitle}</div>
                 </div>}
 
-                {benefitsObject.map(({Icon, title, description}, index) => (
-                    <CustomCardBenifit key={index} Icon={Icon} title={title} description={description} />
+                {benefitsObject.map((benifit, index) => (
+                    <CustomCardBenifit key={index} {...benifit} />
                 ))}
               </div>
             </div>

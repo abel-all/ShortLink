@@ -94,7 +94,11 @@ body {
   --sidebar-ring: oklch(0.708 0 0);
 
   --main-color: #4d9fff;
-  /* --main-color: #4f7eed; */
+  --second-color: #4f7eed;
+  --border-color-white: #d0d0d0;
+  --border-color-dark: #424242;
+  --third-color: #f8f0a7;
+  --third-color-dark: #fff9be;
 }
 
 .dark {

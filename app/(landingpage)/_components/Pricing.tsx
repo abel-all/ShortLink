@@ -122,8 +122,8 @@ const Pricing = () => {
                 Plans
             </div>
             <div className='flex flex-wrap justify-center items-center gap-4'>
-              {cardContent.map(({title, description, oldPrice, price, everythingTitle, benefitsObject, isFreePlan}, index) => (
-                <CustomPlanCard key={index} title={title} description={description} oldPrice={oldPrice} price={price} everythingTitle={everythingTitle} benefitsObject={benefitsObject} isFreePlan={isFreePlan}/>
+              {cardContent.map((card, index) => (
+                <CustomPlanCard key={index} {...card}/>
               ))}
             </div>
         </div>

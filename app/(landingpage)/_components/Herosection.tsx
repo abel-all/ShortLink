@@ -5,7 +5,7 @@ import logo from '@/public/logo.png'
 
 const Herosection = () => {
   return (
-    <section className='h-screen flex flex-col justify-center items-center gap-4'>
+    <section className='min-h-screen flex flex-col justify-center items-center gap-4'>
         <div className='Logo mb-2'>
             <Image className='img-spin' height={120} src={logo} alt='shortlink'/>
         </div>
@@ -16,7 +16,7 @@ const Herosection = () => {
             Shortly build <span className='bg-gradient-to-r from-[var(--main-color)] via-[#4f7eed] to-[var(--main-color)] inline-block text-transparent bg-clip-text'>robust</span> <br/> digital connections
         </div>
         <div className='text-animated'>
-            <Button title='Tri it now'/>
+            <Button title='Try it now' redirectedRoute="/signup" version="redirect" />
         </div>
     </section>
   )

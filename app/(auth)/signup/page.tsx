@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Button from '@/components/Button';
+import { Clock6 } from 'lucide-react';
 
 interface SignupData {
   firstName: string;
@@ -77,7 +79,7 @@ const SignupPage = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Redirect to dashboard
-      router.push('/dashboard');
+      router.push('/signin');
     }
   };
 
@@ -99,46 +101,58 @@ const SignupPage = () => {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left side - Image (hidden on medium and smaller screens) */}
+      {/* Left side - Image */}
       <div className="hidden lg:flex lg:w-1/2 relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-700">
-          <div className="absolute inset-0 bg-black bg-opacity-20" />
-          <div className="relative h-full flex items-center justify-center p-12">
-            <div className="text-white text-center">
-              <h1 className="text-4xl font-bold mb-4">Welcome to Our Platform</h1>
-              <p className="text-xl opacity-90">Join thousands of users who trust us with their journey</p>
-            </div>
-          </div>
-        </div>
+        <Image 
+          src="/authSideImg.png"
+          alt='auth side image for shortly'
+          fill
+          sizes='100vw'
+          className='object-cover'
+        />
       </div>
 
       {/* Right side - Signup Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="max-w-md w-full space-y-8">
+        <div className="max-w-md w-full space-y-4">
           {/* Progress bar */}
-          <div className="mb-8">
-            <div className="flex justify-between text-sm text-gray-500 mb-2">
-              <span>Step {currentStep + 1} of {steps.length}</span>
-              <span>{Math.round(((currentStep + 1) / steps.length) * 100)}%</span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
-                className="bg-blue-600 h-2 rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-              />
-            </div>
+          <div className="mb-8 flex items-center justify-between relative">
+          {Array.from({ length: 4 }, (_, index) => (
+              <div key={index} className="flex items-center w-full">
+                {/* Step circle */}
+                <div 
+                  className={`transition-all duration-500 ease-out flex-shrink-0 w-14 h-14 rounded-full border-2 flex items-center justify-center font-medium text-2xl ${
+                    index < currentStep 
+                      ? "border-green-600 text-black dark:text-white"
+                      : "border-[var(--border-color-white)] text-black dark:text-white"
+                  }`}
+                >
+                  {index + 1}
+                </div>
+                {index < 4 - 1 && (
+                  <div 
+                    className={`flex-1 h-0.5 transition-all duration-500 ease-out ${
+                      index < currentStep 
+                        ? "bg-green-600"
+                        : "bg-[var(--border-color-white)] dark:[var(--border-color-dark)]"
+                    }`}
+                  />
+                )}
+              </div>
+            ))}
           </div>
 
           {/* Form content */}
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+          <div className="space-y-2">
+            <div className="text-5xl font-medium">
               {steps[currentStep].title}
-            </h2>
-            <p className="text-gray-600">
+            </div>
+            <div className="text-xl font-normal">
               {steps[currentStep].subtitle}
-            </p>
+            </div>
           </div>
 
+          {/* Inputs */}
           <div className="space-y-6">
             {/* Input field with animation */}
             <div className="relative">
@@ -146,9 +160,9 @@ const SignupPage = () => {
                 type={steps[currentStep].type}
                 value={currentValue}
                 onChange={(e) => handleInputChange(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
                 placeholder={steps[currentStep].placeholder}
-                className="w-full px-4 py-4 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                className="w-full px-6 border border-gray-300 rounded-full h-12 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                 autoFocus
               />
             </div>
@@ -156,52 +170,70 @@ const SignupPage = () => {
             {/* Navigation buttons */}
             <div className="flex space-x-4">
               {currentStep > 0 && (
-                <button
-                  onClick={handleBack}
-                  className="flex-1 py-4 px-6 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium"
-                >
-                  Back
-                </button>
+                <div className="w-full" onClick={handleBack}>
+                  <Button title='Back' wfull='w-full' version='outline'/>
+                </div>
               )}
-              <button
-                onClick={handleNext}
-                disabled={!currentValue.trim() || isLoading}
-                className="flex-1 py-4 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium flex items-center justify-center"
-              >
-                {isLoading ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Creating account...</span>
-                  </div>
-                ) : (
-                  isLastStep ? 'Create Account' : 'Next'
-                )}
-              </button>
-            </div>
-          </div>
-
-          {/* Form preview */}
-          {currentStep > 0 && (
-            <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Your information:</h3>
-              <div className="space-y-1 text-sm text-gray-600">
-                {formData.firstName && <p>First Name: {formData.firstName}</p>}
-                {formData.lastName && <p>Last Name: {formData.lastName}</p>}
-                {formData.email && <p>Email: {formData.email}</p>}
-                {formData.password && <p>Password: {'•'.repeat(formData.password.length)}</p>}
+              <div className="w-full" onClick={handleNext} >
+                <Button 
+                  title={isLoading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Creating...</span>
+                    </div>
+                  ) : (
+                    isLastStep ? 'Create Account' : 'Next'
+                  )}
+                  wfull='w-full'
+                  disabled={!currentValue.trim() || isLoading}
+                />
               </div>
             </div>
-          )}
+          </div>
+
+          {/* Important - input details */}
+          <div className="mt-10 py-4 px-8 bg-[var(--third-color)] dark:bg-[var(--third-color-dark)] rounded-2xl text-black">
+            <div className="flex gap-2 items-center mb-4">
+              <Clock6 />
+              <div className='text-base font-bold'>
+                Important
+              </div>
+            </div>
+                    
+            <div className="text-base font-normal">
+              {currentStep === 0 && (
+                <div>
+                  <span className="font-semibold">First Name:</span> Enter your legal first name as it appears on official documents
+                </div>
+              )}
+              
+              {currentStep === 1 && (
+                <div>
+                  <span className="font-semibold">Last Name:</span> Enter your legal last name/surname as it appears on official documents
+                </div>
+              )}
+              
+              {currentStep === 2 && (
+                <div>
+                  <span className="font-semibold">Email:</span> Provide a valid email address (e.g., user@example.com) - this will be used for account verification
+                </div>
+              )}
+              
+              {currentStep === 3 && (
+                <div>
+                  <span className="font-semibold">Password:</span> Create a secure password with at least 8 characters, including uppercase, lowercase, numbers, and special characters
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* Sign in link */}
-          <div className="text-center">
-            <p className="text-gray-600">
-              Already have an account?{' '}
-              <a href="/signin" className="text-blue-600 hover:text-blue-500 font-medium">
-                Sign in
-              </a>
-            </p>
-          </div>
+          {currentStep === 0 && <div className="text-base font-medium mt-8 px-2 opacity-80">
+            Already have an account?{' '}
+            <a href="/signin" className="text-[var(--second-color)] hover:text-[var(--main-color)] transition-all duration-300">
+              Sign in
+            </a>
+          </div>}
         </div>
       </div>
     </div>
