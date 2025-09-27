@@ -13,7 +13,7 @@ const Herosection = () => {
             Hi, Everyone
         </div>
         <div className='description text-animated mb-10 md:text-[5.5rem] text-[calc(0.5*5.5rem)] font-bold max-w-5xl text-center'>
-            Build <span className='bg-gradient-to-r from-[var(--main-color)] via-[#4f7eed] to-[var(--main-color)] inline-block text-transparent bg-clip-text'>robust</span> <br/> digital connections
+            Shortly build <span className='bg-gradient-to-r from-[var(--main-color)] via-[#4f7eed] to-[var(--main-color)] inline-block text-transparent bg-clip-text'>robust</span> <br/> digital connections
         </div>
         <div className='text-animated'>
             <Button title='Tri it now'/>
