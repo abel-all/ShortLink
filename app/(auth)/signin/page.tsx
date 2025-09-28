@@ -1,11 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import Button from '@/components/Button';
+import { signinSteps } from '../_data/formInputsData';
+import SideImage from '../_components/SideImage';
+import ProgressNumbers from '../_components/ProgressNumbers';
+import FormContent from '../_components/FormContent';
+import SignLink from '../_components/SignLink';
+import { signinSchema } from '@/lib/schemas/user';
+import { CircleX } from 'lucide-react';
+import useLocalStorageManager from '@/hooks/useLocalStorageManager';
 
-interface SigninData {
+export interface SigninData {
   email: string;
   password: string;
 }
@@ -18,26 +25,17 @@ const SignupPage = () => {
     password: ''
   });
   const [isLoading, setIsLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const steps = [
-    {
-      field: 'email' as keyof SigninData,
-      placeholder: 'Enter your email address',
-      type: 'email',
-      title: 'Your email address',
-      subtitle: 'Enter the email you used to create your account'
-    },
-    {
-      field: 'password' as keyof SigninData,
-      placeholder: 'Enter your password',
-      type: 'password',
-      title: 'Enter your password',
-      subtitle: 'Enter your account password to continue'
-    }
-  ];
+  const { setItem } = useLocalStorageManager();
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [currentStep])
 
   const handleInputChange = (value: string) => {
-    const currentField = steps[currentStep].field;
+    const currentField = signinSteps[currentStep].field;
     setFormData(prev => ({
       ...prev,
       [currentField]: value
@@ -45,26 +43,64 @@ const SignupPage = () => {
   };
 
   const handleNext = async () => {
-    const currentField = steps[currentStep].field;
+    const currentField = signinSteps[currentStep].field;
     const currentValue = formData[currentField];
 
-    if (!currentValue.trim()) return;
+    setErrors([])
+    
+    if (!currentValue.trim()) {
+      setErrors(['This field is required']);
+      return;
+    }
 
-    if (currentStep < steps.length - 1) {
+    const parsedInputs = signinSchema.safeParse(formData)
+
+    if (!parsedInputs.success) {
+      const fieldIssues = parsedInputs.error.issues.filter(issue => issue.path[0] === currentField);
+      if (fieldIssues.length > 0) {
+        setErrors(fieldIssues.map(({message}) => (message)));
+        return;
+      }
+    }
+
+    if (currentStep < signinSteps.length - 1) {
       setCurrentStep(prev => prev + 1);
     } else {
       // Last step - submit form
       setIsLoading(true);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      try {
+      const result = await fetch("http://localhost:8080/api/v1/auth/login", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const body = await result.json();
+  
+      // console.log(body);
+
+      if (body.message !== "OK") {
+        setErrors(Object.values(body.errors))
+        return
+      }
+
+      setItem("accessToken", body.data.accessToken);
+      setItem("expiresIn", body.data.expiresIn);
+
       // Redirect to dashboard
-      router.push('/dashboard');
+      router.push('/home');
+      
+    } catch (error) {
+      setErrors(['Network error — try again']);
+    } finally {
+      setIsLoading(false);
+    }
     }
   };
 
   const handleBack = () => {
+    setErrors([])
     if (currentStep > 0) {
       setCurrentStep(prev => prev - 1);
     }
@@ -76,9 +112,9 @@ const SignupPage = () => {
     }
   };
 
-  const currentField = steps[currentStep].field;
+  const currentField = signinSteps[currentStep].field;
   const currentValue = formData[currentField];
-  const isLastStep = currentStep === steps.length - 1;
+  const isLastStep = currentStep === signinSteps.length - 1;
 
   return (
     <div className="min-h-screen flex">
@@ -86,52 +122,22 @@ const SignupPage = () => {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="max-w-md w-full space-y-4">
           {/* Progress bar */}
-          <div className="mb-8 flex items-center justify-center relative">
-          {Array.from({ length: 2 }, (_, index) => (
-              <div key={index} className="flex items-center w-full">
-                {/* Step circle */}
-                <div 
-                  className={`transition-all duration-500 ease-out flex-shrink-0 w-14 h-14 rounded-full border-2 flex items-center justify-center font-medium text-2xl ${
-                    index < currentStep 
-                      ? "border-green-600 text-black dark:text-white"
-                      : "border-[var(--border-color-white)] text-black dark:text-white"
-                  }`}
-                >
-                  {index + 1}
-                </div>
-                {index < 2 - 1 && (
-                  <div 
-                    className={`flex-1 h-0.5 transition-all duration-500 ease-out ${
-                      index < currentStep 
-                        ? "bg-green-600"
-                        : "bg-[var(--border-color-white)] dark:[var(--border-color-dark)]"
-                    }`}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
+          <ProgressNumbers currentStep={currentStep} nbrOfSteps={2}/>
 
           {/* Form content */}
-          <div className="space-y-2">
-            <div className="text-5xl font-medium">
-              {steps[currentStep].title}
-            </div>
-            <div className="text-xl font-normal">
-              {steps[currentStep].subtitle}
-            </div>
-          </div>
+          <FormContent signupSteps={signinSteps} currentStep={currentStep}/>
 
           {/* Inputs */}
           <div className="space-y-6">
             {/* Input field with animation */}
             <div className="relative">
               <input
-                type={steps[currentStep].type}
+                ref={inputRef}
+                type={signinSteps[currentStep].type}
                 value={currentValue}
                 onChange={(e) => handleInputChange(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder={steps[currentStep].placeholder}
+                placeholder={signinSteps[currentStep].placeholder}
                 className="w-full px-6 border border-gray-300 rounded-full h-12 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                 autoFocus
               />
@@ -152,7 +158,7 @@ const SignupPage = () => {
                       <span>Validating...</span>
                     </div>
                   ) : (
-                    isLastStep ? 'Create Account' : 'Next'
+                    isLastStep ? 'Login' : 'Next'
                   )}
                   wfull='w-full'
                   disabled={!currentValue.trim() || isLoading}
@@ -161,26 +167,29 @@ const SignupPage = () => {
             </div>
           </div>
 
-          {/* Sign in link */}
-          {currentStep === 0 && <div className="text-base font-medium mt-8 px-2 opacity-80">
-            You don't have an account?{' '}
-            <a href="/signup" className="text-[var(--second-color)] hover:text-[var(--main-color)] transition-all duration-300">
-              Sign up
-            </a>
+          {!!errors.length && <div className="mt-10 py-4 px-8 bg-red-700 dark:bg-red-700 rounded-2xl text-black">
+            <div className="flex gap-2 items-center mb-4">
+              <CircleX />
+              <div className='text-base font-bold'>
+                Error
+              </div>
+            </div>
+            <div className="text-base font-normal">
+              {errors.map((error, index) => (
+                <div key={index}>
+                  <span className="font-semibold">{'-> '}</span> {error}
+                </div>
+              ))}
+            </div>
           </div>}
+
+          {/* Sign in link */}
+          <SignLink currentStep={currentStep} title="You don't have an account?" link='/signup'/>
         </div>
       </div>
 
       {/* Right side - Image */}
-      <div className="hidden lg:flex lg:w-1/2 relative">
-        <Image 
-          src="/authSideImg.png"
-          alt='auth side image for shortly'
-          fill
-          sizes='100vw'
-          className='object-cover'
-        />
-      </div>
+      <SideImage />
 
     </div>
   );
