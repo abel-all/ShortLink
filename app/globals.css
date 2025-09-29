@@ -202,3 +202,16 @@ body {
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
+
+@keyframes slide-in {
+    from {
+        left: -100%;
+    }
+    to {
+        left: 0;
+    }
+}
+
+.slide-in {
+    animation: slide-in 1s forwards;
+}

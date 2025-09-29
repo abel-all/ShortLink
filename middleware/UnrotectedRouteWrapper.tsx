@@ -1,5 +1,6 @@
 'use client';
 
+import LoaderOntop from '@/components/LoaderOnTop';
 import useLocalStorageManager from '@/hooks/useLocalStorageManager';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -13,29 +14,31 @@ const UnprotectedRouteWrapper = ({ children }: { children: React.ReactNode }) =>
   useEffect(() => {
 
     const fetchUserData = async () => {
-        await fetch('http://localhost:8080/api/v1/users/me', {
+      try {
+        const result = await fetch('http://localhost:8080/api/v1/users/me', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${getItem('accessToken')}`
             },
         })
-          .then(async (r) => await r.json())
-          .then(body => {
-            if (body.message === "OK") router.replace('/home');
-            else {
-                console.log(body);
-                setLoading(false);
-            }
-          })
-        //   .catch(() => router.replace('/home'))
+
+        if (!result.ok) {
+          setLoading(false);
+        } else {
+          router.replace('/home');
+        }
+        
+      } catch (error) {
+        setLoading(false);
+      }
     }
 
     fetchUserData();
 
   }, []);
 
-  if (loading) return <div>Loading…</div>;
+  if (loading) return <LoaderOntop />;
   return <>{children}</>;
 }
 
