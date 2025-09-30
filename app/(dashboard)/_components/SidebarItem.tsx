@@ -1,31 +1,40 @@
 'use client'
 
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { SidebarContext } from './Sidebar';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 interface Props {
     icon: React.ReactNode;
     text: string;
-    active?: boolean;
+    href: string;
+    exact?: boolean;
 }
 
-const SidebarItem = ({icon, text, active=false}: Props) => {
+const SidebarItem = ({icon, text, href, exact=false}: Props) => {
 
   const isExpanded = useContext(SidebarContext);
 
+  const pathname = usePathname();
+
+  const isActive = exact ? pathname === href : pathname === href || pathname.startsWith(href + '/')
+
   return (
-    <li className={`
-        relative flex items-center py-2 px-3 my-1
-        font-medium rounded-full cursor-pointer transition-colors group
-        ${
-            active
-            ? "bg-gradient-to-tr from-[var(--second-color)]/50 to-[var(--main-color)]/70 dark:to-[var(--main-color)] "
-            : "hover:bg-[var(--main-color)]/20 dark:hover:bg-[var(--main-color)]/40 text-foreground/60"
-        }
+    <Link 
+        href={href}
+        className={`
+            relative flex items-center py-2 px-3 my-1
+            font-medium rounded-full cursor-pointer transition-colors group
+            ${
+                isActive
+                ? "bg-gradient-to-tr from-[var(--second-color)]/50 to-[var(--main-color)]/70 dark:to-[var(--main-color)] "
+                : "hover:bg-[var(--main-color)]/20 dark:hover:bg-[var(--main-color)]/40 text-foreground/60"
+            }
     `}>
         {icon}
         <span className={`
-            overflow-hidden transition-all ${isExpanded ?
+            text-xl font-normal overflow-hidden transition-all ${isExpanded ?
                 "w-52 ml-3" : "w-0"
             }
         `}>
@@ -37,7 +46,7 @@ const SidebarItem = ({icon, text, active=false}: Props) => {
         >
             {text}
         </div>}
-    </li>
+    </Link>
   )
 }
 

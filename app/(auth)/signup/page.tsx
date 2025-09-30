@@ -173,7 +173,7 @@ const SignupPage = () => {
           </div>
 
           {/* Important - input details || Errors */}
-            {isAccountCreateded ? <div className="mt-10 py-4 px-8 bg-green-700 dark:bg-green-700 rounded-2xl text-black">
+            {isAccountCreateded ? <div className="mt-10 py-4 px-8 bg-green-600 dark:bg-green-600 rounded-2xl text-black">
               <div className="flex gap-2 items-center mb-4">
                 <UserRoundCheck />
                 <div className='text-base font-bold'>
@@ -187,7 +187,7 @@ const SignupPage = () => {
                   </div>
               </div>
             </div> :
-            !!errors.length ? <div className="mt-10 py-4 px-8 bg-red-700 dark:bg-red-700 rounded-2xl text-black">
+            !!errors.length ? <div className="mt-10 py-4 px-8 bg-red-600 dark:bg-red-600 rounded-2xl text-black">
               <div className="flex gap-2 items-center mb-4">
                 <CircleX />
                 <div className='text-base font-bold'>

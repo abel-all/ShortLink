@@ -6,7 +6,7 @@ import { MoreVertical, PanelLeftOpen, PanelRightOpen } from 'lucide-react'
 import useUser from '@/context/UserContext'
 import { useRouter } from 'next/navigation'
 
-export const SidebarContext = createContext<boolean | undefined>(undefined);
+export const SidebarContext = createContext<boolean>(true);
 
 const Sidebar = ({children}: {children: React.ReactNode}) => {
 
@@ -43,13 +43,13 @@ const Sidebar = ({children}: {children: React.ReactNode}) => {
                 <ul className='flex-1 px-3'>{children}</ul>
             </SidebarContext.Provider>
 
-            <div className='cursor-pointer relative group border-t flex p-3'>
+            <div className={`cursor-pointer relative group border-t flex p-5 ${!isExpanded && "pb-2.5"}`}>
                 <div className={`flex justify-center items-center font-semibold w-10 h-10 bg-[var(--border-color-white)] dark:bg-[var(--border-color-dark)] rounded-full`} >
                     {usernameLetters}
                 </div>
                 <div className={`flex justify-between items-center overflow-hidden transition-all ${isExpanded ? "w-52 ml-3" : "w-0"}`}>
                     <div>
-                        <h4 className='font-semibold'>{firstName + " " + lastName}</h4>
+                        <h4 className='font-medium'>{firstName + " " + lastName}</h4>
                         <span className='text-xs opacity-90'>{email}</span>
                     </div>
                     <MoreVertical />

@@ -9,12 +9,13 @@ const sidebarItems = [
   {
     icon: <House />,
     text: "Home",
-    active: true,
+    href: "/home",
+    exact: true,
   },
   {
     icon: <Link />,
     text: "Links",
-    active: false,
+    href: "/links",
   },
 
 ]
@@ -29,8 +30,8 @@ const layout = ({children}: {children: React.ReactNode}) => {
             <SidebarItem key={index} {...item}/>
           ))}
           <hr className='my-3'/>
-          <SidebarItem icon={<Settings />} text="Settings" />
-          <SidebarItem icon={<LifeBuoy />} text="Help" />
+          <SidebarItem icon={<Settings />} text="Settings" href={"/settings"} />
+          <SidebarItem icon={<LifeBuoy />} text="Help" href={"/help"} />
         </Sidebar>
         <div className='mt-[4.625rem]'>
           {children}
