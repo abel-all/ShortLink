@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useContext, useState } from 'react'
-import { SidebarContext } from './Sidebar';
+import React from 'react'
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import useDashboard from '@/context/DashboardContext';
 
 interface Props {
     icon: React.ReactNode;
@@ -14,7 +14,7 @@ interface Props {
 
 const SidebarItem = ({icon, text, href, exact=false}: Props) => {
 
-  const isExpanded = useContext(SidebarContext);
+  const { isExpanded } = useDashboard();
 
   const pathname = usePathname();
 

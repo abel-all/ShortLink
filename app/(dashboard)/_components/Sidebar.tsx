@@ -1,16 +1,15 @@
 'use client'
 import Image from 'next/image'
-import React, { createContext, useState } from 'react'
+import React from 'react'
 import logo from '@/public/logo.png'
 import { MoreVertical, PanelLeftOpen, PanelRightOpen } from 'lucide-react'
 import useUser from '@/context/UserContext'
 import { useRouter } from 'next/navigation'
-
-export const SidebarContext = createContext<boolean>(true);
+import useDashboard from '@/context/DashboardContext'
 
 const Sidebar = ({children}: {children: React.ReactNode}) => {
 
-  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const {isExpanded, setIsExpanded} = useDashboard();
   const { firstName, lastName, email } = useUser();
   const router = useRouter();
 
@@ -25,7 +24,7 @@ const Sidebar = ({children}: {children: React.ReactNode}) => {
   const usernameLetters = firstName[0].toUpperCase() + lastName[0].toUpperCase();
 
   return (
-    <aside className='h-screen z-51'>
+    <aside className='h-screen z-51 fixed left-0 top-0'>
         <nav className='h-full flex flex-col bg-background border-r border-[var(--border-color-white)] dark:border-[var(--border-color-dark)]'>
             <div className='flex justify-between items-center p-4 pb-6'>
                 <Image 
@@ -39,9 +38,8 @@ const Sidebar = ({children}: {children: React.ReactNode}) => {
                     {isExpanded ? <PanelRightOpen /> : <PanelLeftOpen />}
                 </button>
             </div>
-            <SidebarContext.Provider value={isExpanded}>
-                <ul className='flex-1 px-3'>{children}</ul>
-            </SidebarContext.Provider>
+            
+            <ul className='flex-1 px-3'>{children}</ul>
 
             <div className={`cursor-pointer relative group border-t flex p-5 ${!isExpanded && "pb-2.5"}`}>
                 <div className={`flex justify-center items-center font-semibold w-10 h-10 bg-[var(--border-color-white)] dark:bg-[var(--border-color-dark)] rounded-full`} >
