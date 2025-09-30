@@ -1,6 +1,7 @@
 'use client';
 
-import { CircleX, Mail, MapPin, Phone } from 'lucide-react';
+import Button from '@/components/Button';
+import { CircleCheckBig, CircleX, Mail, MapPin, Phone } from 'lucide-react';
 import { useState, FormEvent } from 'react';
 
 interface FormData {
@@ -86,13 +87,13 @@ const HelpPage = () => {
     <div className="py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl">
         <div className="mb-12">
-          <div className="text-5xl font-medium text-gray-900 mb-4">Help Center</div>
-          <div className="text-xl font-normal opacity-80">We&apos;re here to help. Get in touch with us anytime.</div>
+          <div className="text-4xl font-medium">Help Center</div>
+          <div className="text-lg font-normal opacity-80">We&apos;re here to help. Get in touch with us anytime.</div>
         </div>
 
         {/* Contact Information Section */}
         <div className="mb-8">
-          <h2 className="text-3xl font-medium mb-6">Contact Information</h2>
+          <h2 className="text-2xl font-medium mb-4">Contact Information</h2>
           
           <div className="grid lg:grid-cols-3 gap-3 text-black">
             {/* Phone */}
@@ -133,7 +134,7 @@ const HelpPage = () => {
 
         {/* Contact Form Section */}
         <div className="">
-          <h2 className="text-3xl font-medium mb-6">Send us a Message</h2>
+          <h2 className="text-2xl font-medium mb-4">Send us a Message</h2>
           
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Field */}
@@ -147,8 +148,8 @@ const HelpPage = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                  errors.name ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                className={`w-full px-4 border rounded-full h-12 placeholder-gray-600 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                  errors.name ? 'border-red-500 bg-red-50' : 'border-[var(--border-color-white)] dark:border-[var(--border-color-dark)]'
                 }`}
                 placeholder="Enter your name"
               />
@@ -162,7 +163,7 @@ const HelpPage = () => {
 
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium mb-2">
                 Email <span className="text-red-500">*</span>
               </label>
               <input
@@ -171,8 +172,8 @@ const HelpPage = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                  errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                className={`w-full px-4 py-3 border rounded-full h-12 placeholder-gray-600 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+                  errors.email ? 'border-red-500 bg-red-50' : 'border-[var(--border-color-white)] dark:border-[var(--border-color-dark)]'
                 }`}
                 placeholder="Enter your email"
               />
@@ -186,7 +187,7 @@ const HelpPage = () => {
 
             {/* Message Field */}
             <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="message" className="block text-sm font-medium mb-2">
                 Message <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -195,8 +196,8 @@ const HelpPage = () => {
                 value={formData.message}
                 onChange={handleChange}
                 rows={5}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none ${
-                  errors.message ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                className={`w-full px-4 py-3 border rounded-full h-12 placeholder-gray-600 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none ${
+                  errors.message ? 'border-red-500 bg-red-50' : 'border-[var(--border-color-white)] dark:border-[var(--border-color-dark)]'
                 }`}
                 placeholder="Write your message here..."
               />
@@ -208,36 +209,8 @@ const HelpPage = () => {
               )}
             </div>
 
-            {/* Status Messages */}
-            {submitStatus === 'success' && (
-              <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center">
-                <svg className="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <p className="text-green-800">Your message has been sent successfully!</p>
-              </div>
-            )}
-
-            {submitStatus === 'error' && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center">
-                <svg className="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-                <p className="text-red-800">Something went wrong. Please try again.</p>
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300 transform ${
-                isSubmitting 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl'
-              }`}
-            >
-              {isSubmitting ? (
+            <Button 
+              title={isSubmitting ? (
                 <span className="flex items-center justify-center">
                   <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -248,7 +221,26 @@ const HelpPage = () => {
               ) : (
                 'Send Message'
               )}
-            </button>
+              wfull='w-full'
+              disabled={isSubmitting}
+              version='form'
+            />
+
+            {/* Status Messages */}
+            {submitStatus === 'success' && (
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center">
+                <CircleCheckBig className="w-5 h-5 text-green-600 mr-2" />
+                <p className="text-green-800">Your message has been sent successfully!</p>
+              </div>
+            )}
+
+            {submitStatus === 'error' && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center">
+                <CircleX className="w-5 h-5 text-red-600 mr-2" />
+                <p className="text-red-800">Something went wrong. Please try again.</p>
+              </div>
+            )}
+            
           </form>
         </div>
       </div>
