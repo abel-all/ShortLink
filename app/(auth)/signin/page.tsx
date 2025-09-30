@@ -75,14 +75,13 @@ const SignupPage = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
-      const body = await result.json();
-
-
-      if (body.message !== "OK") {
-        setErrors(Object.values(body.errors))
+      
+      if (!result.ok) {
+        setErrors(["Email or Password is incorrect, try again"])
         return
       }
+
+      const body = await result.json();
 
       setItem("accessToken", body.data.accessToken);
       setItem("expiresIn", body.data.expiresIn);

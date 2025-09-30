@@ -79,7 +79,7 @@ const SignupPage = () => {
       });
 
       const body = await result.json();
-  
+
       if (body.message !== "OK") {
         setErrors(Object.values(body.errors))
         return
