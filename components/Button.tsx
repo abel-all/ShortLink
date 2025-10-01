@@ -11,7 +11,7 @@ interface Props {
     textColor?: string;
 }
 
-const Button = ({title, wfull="px-8", redirectedRoute, disabled, version="default", textColor}: Props) => {
+const Button = ({title, wfull="px-8", redirectedRoute, disabled, version="default", textColor="bg-[var(--main-color)] hover:bg-[var(--main-color)]/90 dark:text-black text-white"}: Props) => {
   
   switch (version) {
     case "redirect" :

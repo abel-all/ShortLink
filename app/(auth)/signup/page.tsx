@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/Button';
-import { CircleX, Clock6, UserRoundCheck } from 'lucide-react';
+import { CircleX, Clock6, Dot, UserRoundCheck } from 'lucide-react';
 import { signupSteps } from '../_data/formInputsData';
 import SideImage from '../_components/SideImage';
 import ProgressNumbers from '../_components/ProgressNumbers';
@@ -173,32 +173,36 @@ const SignupPage = () => {
           </div>
 
           {/* Important - input details || Errors */}
-            {isAccountCreateded ? <div className="mt-10 py-4 px-8 bg-green-600 dark:bg-green-600 rounded-2xl text-black">
+            {isAccountCreateded ? <div className="mt-10 py-4 px-8 bg-green-50 border border-green-200 rounded-2xl">
               <div className="flex gap-2 items-center mb-4">
-                <UserRoundCheck />
-                <div className='text-base font-bold'>
+                <UserRoundCheck className='text-green-600'/>
+                <div className='text-base font-bold text-green-800'>
                   Success
                 </div>
               </div>
 
-              <div className="text-base font-normal">
-                  <div>
-                    <span className="font-semibold">{'-> '}</span> Your account has been created successfuly.
+              <div className="text-base font-normal text-green-800">
+                  <div className='flex items-center gap-1'>
+                    <Dot />
+                    <div>Your account has been created successfuly.</div>
                   </div>
               </div>
             </div> :
-            !!errors.length ? <div className="mt-10 py-4 px-8 bg-red-600 dark:bg-red-600 rounded-2xl text-black">
+            !!errors.length ? <div className="mt-10 py-4 px-8 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-800 rounded-2xl">
               <div className="flex gap-2 items-center mb-4">
-                <CircleX />
-                <div className='text-base font-bold'>
+                <CircleX className='text-red-600 dark:text-red-400'/>
+                <div className='text-base font-bold text-red-800 dark:text-red-300'>
                   Error
                 </div>
               </div>
 
-              <div className="text-base font-normal">
+              <div className="text-base font-normal text-red-800 dark:text-red-300">
                 {errors.map((error, index) => (
-                  <div key={index}>
-                    <span className="font-semibold">{'-> '}</span> {error}
+                  <div key={index} className='flex items-center gap-1'>
+                    <Dot />
+                    <div>
+                      {error}
+                    </div>
                   </div>
                 ))}
               </div>

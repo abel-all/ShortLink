@@ -9,7 +9,7 @@ import ProgressNumbers from '../_components/ProgressNumbers';
 import FormContent from '../_components/FormContent';
 import SignLink from '../_components/SignLink';
 import { signinSchema } from '@/lib/schemas/user';
-import { CircleX } from 'lucide-react';
+import { CircleX, Dot } from 'lucide-react';
 import useLocalStorageManager from '@/hooks/useLocalStorageManager';
 
 export interface SigninData {
@@ -165,17 +165,20 @@ const SignupPage = () => {
             </div>
           </div>
 
-          {!!errors.length && <div className="mt-10 py-4 px-8 bg-red-700 dark:bg-red-700 rounded-2xl text-black">
+          {!!errors.length && <div className="mt-10 py-4 px-8 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-800 rounded-2xl">
             <div className="flex gap-2 items-center mb-4">
-              <CircleX />
-              <div className='text-base font-bold'>
+              <CircleX className='text-red-600 dark:text-red-400'/>
+              <div className='text-base font-bold text-red-800 dark:text-red-300'>
                 Error
               </div>
             </div>
-            <div className="text-base font-normal">
+            <div className="text-base font-normal text-red-800 dark:text-red-300">
               {errors.map((error, index) => (
-                <div key={index}>
-                  <span className="font-semibold">{'-> '}</span> {error}
+                <div key={index} className='flex items-center gap-1'>
+                  <Dot />
+                  <div>
+                    {error}
+                  </div>
                 </div>
               ))}
             </div>
