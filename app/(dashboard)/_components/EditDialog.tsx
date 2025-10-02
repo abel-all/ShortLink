@@ -71,7 +71,7 @@ const EditDialog = ({ link, open, onOpenChange, onSave }: Props) => {
             <Checkbox
               id="active"
               checked={formData.isActive}
-              onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+              onCheckedChange={() => setFormData({ ...formData, isActive: !formData.isActive })}
             />
             <Label htmlFor="active" className="cursor-pointer">Active</Label>
           </div>
