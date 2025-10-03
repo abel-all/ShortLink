@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import Button from '@/components/Button';
 import { PaginationData } from '../links/page';
 
 interface Props {
@@ -11,44 +11,47 @@ const PaginationControls = ({ pagination, onPageChange }: Props) => {
   
   return (
     <div className="flex items-center justify-between px-2 py-4">
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm sm:text-base text-muted-foreground">
         Showing {pagination.pageNo * pagination.pageSize + 1} to{' '}
         {Math.min((pagination.pageNo + 1) * pagination.pageSize, pagination.totalElements)} of{' '}
         {pagination.totalElements} entries
       </div>
       <div className="flex items-center space-x-2">
-        <Button
-          variant="outline"
-          size="sm"
+        <div
           onClick={() => onPageChange(pagination.pageNo - 1)}
-          disabled={pagination.pageNo === 0}
         >
-          Previous
-        </Button>
+          <Button 
+            title="Previous"
+            disabled={pagination.pageNo === 0}
+            version="outline"
+          />
+        </div>
         <div className="flex items-center gap-1">
           {pages.slice(
             Math.max(0, pagination.pageNo - 2),
             Math.min(pagination.totalPages, pagination.pageNo + 3)
           ).map((page) => (
-            <Button
+            <div
               key={page}
-              variant={page === pagination.pageNo ? 'default' : 'outline'}
-              size="sm"
               onClick={() => onPageChange(page)}
-              className="w-9"
             >
-              {page + 1}
-            </Button>
+              <Button 
+                title={page + 1}
+                version={page === pagination.pageNo ? 'colored' : 'outline'}
+                textColor='bg-foreground text-background'
+              />
+            </div>
           ))}
         </div>
-        <Button
-          variant="outline"
-          size="sm"
+        <div
           onClick={() => onPageChange(pagination.pageNo + 1)}
-          disabled={pagination.pageNo >= pagination.totalPages - 1}
         >
-          Next
-        </Button>
+          <Button 
+            title="Next"
+            disabled={pagination.pageNo >= pagination.totalPages - 1}
+            version="outline"
+          />
+        </div>
       </div>
     </div>
   );

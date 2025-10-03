@@ -21,7 +21,7 @@ const Header = () => {
     }
 
   return (
-    <header className='h-[4.625rem] w-full border-b border-[var(--border-color-white)] dark:border-[#2f2f2f] fixed z-50 top-0 left-0 bg-background px-4'>
+    <header className='h-[4.625rem] w-full border-b border-[var(--border-color-white)] dark:border-[#2f2f2f] fixed z-40 top-0 left-0 bg-background px-4'>
         <div className='flex items-center h-full w-full'>
             <div className='flex gap-3 items-center ml-auto'>
                 <ModeToggle/>

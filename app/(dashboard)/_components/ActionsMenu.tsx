@@ -18,9 +18,9 @@ interface Props  {
 const ActionsMenu = ({ link, onDelete, onEdit, onCopy }: Props) => (
   <DropdownMenu>
     <DropdownMenuTrigger asChild>
-      <Button variant="ghost" size="icon">
-        <MoreHorizontal className="h-4 w-4" />
-      </Button>
+      <div className='cursor-pointer'>
+        <MoreHorizontal className="h-5 w-5" />
+      </div>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
       <DropdownMenuItem onClick={() => onCopy(link)}>
@@ -32,7 +32,7 @@ const ActionsMenu = ({ link, onDelete, onEdit, onCopy }: Props) => (
         Edit
       </DropdownMenuItem>
       <DropdownMenuItem onClick={() => onDelete(link)} className="text-red-600">
-        <Trash2 className="mr-2 h-4 w-4" />
+        <Trash2 className="text-red-600 mr-2 h-4 w-4" />
         Delete
       </DropdownMenuItem>
     </DropdownMenuContent>

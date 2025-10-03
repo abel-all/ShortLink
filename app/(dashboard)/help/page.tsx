@@ -1,7 +1,7 @@
 'use client';
 
 import Button from '@/components/Button';
-import { CircleCheckBig, CircleX, Mail, MapPin, Phone } from 'lucide-react';
+import { CircleCheckBig, CircleX, Mail, MapPin, Phone, Send, Signature } from 'lucide-react';
 import { useState, FormEvent } from 'react';
 
 interface FormData {
@@ -77,7 +77,6 @@ const HelpPage = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error for this field when user starts typing
     if (errors[name as keyof FormErrors]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
     }
@@ -86,14 +85,21 @@ const HelpPage = () => {
   return (
     <div className="py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl">
-        <div className="mb-12">
+        <div className="mb-8 sm:mb-10">
           <div className="text-4xl font-medium">Help Center</div>
           <div className="text-lg font-normal opacity-80">We&apos;re here to help. Get in touch with us anytime.</div>
         </div>
 
         {/* Contact Information Section */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-medium mb-4">Contact Information</h2>
+        <section className='border border-[var(--border-color-white)] dark:border-[var(--border-color-dark)] rounded-xl p-6 sm:p-8 mb-6'>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <Signature className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div className="text-2xl font-medium">
+              Contact Information
+            </div>
+          </div>
           
           <div className="grid lg:grid-cols-3 gap-3 text-black">
             {/* Phone */}
@@ -130,11 +136,20 @@ const HelpPage = () => {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Contact Form Section */}
-        <div className="">
-          <h2 className="text-2xl font-medium mb-4">Send us a Message</h2>
+        <section className='border border-[var(--border-color-white)] dark:border-[var(--border-color-dark)] rounded-xl p-6 sm:p-8 mb-6'>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <Send className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div className="text-2xl font-medium">
+              Send us a Message
+            </div>
+          </div>
+        {/* <div className="">
+          <h2 className="text-2xl font-medium mb-4">Send us a Message</h2> */}
           
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Field */}
@@ -242,7 +257,7 @@ const HelpPage = () => {
             )}
             
           </form>
-        </div>
+        </section>
       </div>
     </div>
   );

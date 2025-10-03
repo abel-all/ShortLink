@@ -24,7 +24,7 @@ const Sidebar = ({children}: {children: React.ReactNode}) => {
   const usernameLetters = firstName[0].toUpperCase() + lastName[0].toUpperCase();
 
   return (
-    <aside className='h-screen z-52 fixed left-0 top-0'>
+    <aside className='h-screen z-42 fixed left-0 top-0'>
         <nav className='h-full flex flex-col bg-background border-r border-[var(--border-color-white)] dark:border-[var(--border-color-dark)]'>
             <div className='flex justify-between items-center p-4 pb-6'>
                 <Image 
