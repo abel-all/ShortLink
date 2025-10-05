@@ -43,7 +43,7 @@ const EditDialog = ({ link, open, onOpenChange, onSave }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[625px] rounded-xl">
+      <DialogContent className="sm:max-w-[625px] rounded-xl border border-[var(--border-color-white)] dark:border-[var(--border-color-dark)]">
         <DialogHeader>
           <DialogTitle className="text-xl">Edit Short Link</DialogTitle>
           <DialogDescription>

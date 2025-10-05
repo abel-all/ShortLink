@@ -12,8 +12,6 @@ import {
 } from '@/components/ui/table';
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -34,6 +32,7 @@ import TableSkeleton from '../_components/TableSkeleton';
 import EditDialog from '../_components/EditDialog';
 import ActionsMenu from '../_components/ActionsMenu';
 import PaginationControls from '../_components/PaginationControls';
+import CreateNewLink from '../_components/CreateNewLink';
 
 
 // Types
@@ -202,9 +201,12 @@ export default function ShortLinksDataTable() {
   return (
     <div className='py-12 px-4 sm:px-6 lg:px-8'>
       <div className="w-full space-y-4">
-        <div className="mb-8 sm:mb-10">
-          <div className="text-4xl font-medium">Links</div>
-          <div className="text-lg font-normal opacity-80">Shorten, share, and track your links in seconds.</div>
+        <div className="mb-8 sm:mb-10 flex max-md:flex-col gap-2 md:justify-between md:items-center">
+          <div>
+            <div className="text-4xl font-medium">Links</div>
+            <div className="text-lg font-normal opacity-80">Shorten, share, and track your links in seconds.</div>
+          </div>
+          <CreateNewLink />
         </div>
         {/* Filters and Search */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -367,7 +369,7 @@ export default function ShortLinksDataTable() {
                 }}
               >
                 <Button 
-                  title="Cancel"
+                  title="Delete"
                   version='colored'
                   textColor='bg-red-600 hover:bg-red-700 text-white'
                 />

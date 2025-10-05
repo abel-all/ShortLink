@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${outfit.className} ${outfit.variable} tracking-wider antialiased`}
+        className={`${outfit.className} ${outfit.variable} tracking-wide antialiased`}
       >
         <ThemeProvider
             attribute="class"

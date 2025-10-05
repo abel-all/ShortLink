@@ -148,8 +148,6 @@ const HelpPage = () => {
               Send us a Message
             </div>
           </div>
-        {/* <div className="">
-          <h2 className="text-2xl font-medium mb-4">Send us a Message</h2> */}
           
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name Field */}
