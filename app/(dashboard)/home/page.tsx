@@ -3,9 +3,44 @@
 import useUser from '@/context/UserContext'
 import React from 'react'
 import CreateNewLink from '../_components/CreateNewLink';
-import { ChartNoAxesCombined, Earth } from 'lucide-react';
+import { ChartNoAxesCombined, Earth, MonitorSmartphone } from 'lucide-react';
 import HomeCard from '../_components/HomeCard';
 import CountryVisitorsTable from '../_components/CountryVisitorsTable';
+import ChartPieLabel from '../_components/ChartPieLabel';
+
+const chartData = [
+  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
+  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
+  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
+  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
+  { browser: "other", visitors: 90, fill: "var(--color-other)" },
+]
+
+const chartConfig = {
+  visitors: {
+    label: "Visitors",
+  },
+  chrome: {
+    label: "Chrome",
+    color: "var(--chart-1)",
+  },
+  safari: {
+    label: "Safari",
+    color: "var(--chart-2)",
+  },
+  firefox: {
+    label: "Firefox",
+    color: "var(--chart-3)",
+  },
+  edge: {
+    label: "Edge",
+    color: "var(--chart-4)",
+  },
+  other: {
+    label: "Other",
+    color: "var(--chart-5)",
+  },
+}
 
 const cardsInfo = [
   {
@@ -70,6 +105,22 @@ const page = () => {
           </div>
 
           <CountryVisitorsTable />
+        </section>
+
+        {/* Devices and software */}
+        <section className='border border-[var(--border-color-white)] dark:border-[var(--border-color-dark)] rounded-xl p-6 sm:p-8 mb-6'>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+              <MonitorSmartphone className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div className="text-2xl font-medium">
+              Devices and software
+            </div>
+          </div>
+          <div className='flex'>
+            <ChartPieLabel title='Devices' chartData={chartData} chartConfig={chartConfig}/>
+            <ChartPieLabel title='Devices' chartData={chartData} chartConfig={chartConfig}/>
+          </div>
         </section>
     </div>
   )
