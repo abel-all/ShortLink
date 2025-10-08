@@ -1,6 +1,6 @@
 'use client'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect } from 'react'
 import logo from '@/public/logo.png'
 import { MoreVertical, PanelLeftOpen, PanelRightOpen } from 'lucide-react'
 import useUser from '@/context/UserContext'
@@ -12,6 +12,20 @@ const Sidebar = ({children}: {children: React.ReactNode}) => {
   const {isExpanded, setIsExpanded} = useDashboard();
   const { firstName, lastName, email } = useUser();
   const router = useRouter();
+
+  useEffect(() => {
+    if (window.innerWidth <= 768) setIsExpanded(false)
+
+    const onResize = () => {
+        setIsExpanded(window.innerWidth > 768);
+    }
+
+    onResize();
+
+    window.addEventListener('resize', onResize);
+
+    return () => window.removeEventListener('resize', onResize);
+  }, [])
 
   const handleClick = () => {
     setIsExpanded(prev => !prev);

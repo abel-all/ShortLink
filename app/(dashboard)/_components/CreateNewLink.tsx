@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import useLocalStorageManager from '@/hooks/useLocalStorageManager'
 
 interface LinkFormData {
@@ -108,7 +107,8 @@ const CreateNewLink = () => {
 
   const handleCopy = async () => {
     if (createdLink) {
-      await navigator.clipboard.writeText(`http://localhost/r/${createdLink.linkId}`)
+      const hostname: string = window.location.hostname;
+      await navigator.clipboard.writeText(`${hostname}:3000/r/${createdLink.linkId}`)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     }

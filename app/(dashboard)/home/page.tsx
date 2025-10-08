@@ -117,9 +117,13 @@ const page = () => {
               Devices and software
             </div>
           </div>
-          <div className='flex'>
-            <ChartPieLabel title='Devices' chartData={chartData} chartConfig={chartConfig}/>
-            <ChartPieLabel title='Devices' chartData={chartData} chartConfig={chartConfig}/>
+          <div className='flex max-md:flex-col gap-4 max-md:items-center'>
+            <div className='w-1/2'>
+              <ChartPieLabel title='Devices' chartData={chartData} chartConfig={chartConfig}/>
+            </div>
+            <div className='w-1/2'>
+              <ChartPieLabel title='Operating systems' chartData={chartData} chartConfig={chartConfig}/>
+            </div>
           </div>
         </section>
     </div>

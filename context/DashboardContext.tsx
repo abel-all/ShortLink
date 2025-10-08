@@ -11,7 +11,9 @@ interface UserContextType {
 const DashboardContext = createContext<UserContextType | undefined>(undefined);
 
 export const DashboardProvider = ({ children }: {children: React.ReactNode}) => {
-    const [isExpanded, setIsExpanded] = useState<boolean>(true);
+    const [isExpanded, setIsExpanded] = useState<boolean>(() =>
+        typeof window !== "undefined" ? window.innerWidth > 768 : true
+    );
 
     const value = {
         isExpanded,

@@ -33,6 +33,7 @@ import EditDialog from '../_components/EditDialog';
 import ActionsMenu from '../_components/ActionsMenu';
 import PaginationControls from '../_components/PaginationControls';
 import CreateNewLink from '../_components/CreateNewLink';
+import useLocalStorageManager from '@/hooks/useLocalStorageManager';
 
 
 // Types
@@ -72,25 +73,45 @@ export default function ShortLinksDataTable() {
     totalElements: 0,
     totalPages: 0,
   });
+  // const [linkPagination, setLinkPagination] = useState<{pageSize: number; pageNo: number}>({
+  //   pageSize: 10,
+  //   pageNo: 0,
+  // });
+
+  const { getItem } = useLocalStorageManager();
+  
 
   // Fetch data
   const fetchLinks = async (pageNo: number, pageSize: number) => {
     setLoading(true);
     try {
       // Simulating API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // await new Promise(resolve => setTimeout(resolve, 1000));
+      const result = await fetch(`http://localhost:8080/api/v1/users/me/short-link/all?pageSize=${pageSize}&pageNo=${pageNo}`, {
+        method: 'GET',
+        headers: { 
+          'Authorization': `Bearer ${getItem('accessToken')}`
+        },
+      });
+
+      if (!result.ok) {
+        // 
+        return
+      }
+
+      const body = await result.json();
       
       // Mock data
-      const mockData = Array.from({ length: 25 }, (_, i) => ({
-        id: i + 1,
-        linkId: `${Math.random().toString(36).substr(2, 8)}`,
-        link: `https://example.com/link${i + 1}`,
-        expirationDate: i % 3 === 0 ? '2025-12-31T23:59:59Z' : null,
-        name: `Link ${i + 1}`,
-        description: `Description ${i + 1}`,
-        password: i % 2 === 0 ? null : 'protected',
-        active: i % 3 !== 0,
-      }));
+      // const mockData = Array.from({ length: 25 }, (_, i) => ({
+      //   id: i + 1,
+      //   linkId: `${Math.random().toString(36).substr(2, 8)}`,
+      //   link: `https://example.com/link${i + 1}`,
+      //   expirationDate: i % 3 === 0 ? '2025-12-31T23:59:59Z' : null,
+      //   name: `Link ${i + 1}`,
+      //   description: `Description ${i + 1}`,
+      //   password: i % 2 === 0 ? null : 'protected',
+      //   active: i % 3 !== 0,
+      // }));
 
       const start = pageNo * pageSize;
       const end = start + pageSize;

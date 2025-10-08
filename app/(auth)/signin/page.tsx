@@ -11,13 +11,14 @@ import SignLink from '../_components/SignLink';
 import { signinSchema } from '@/lib/schemas/user';
 import { CircleX, Dot } from 'lucide-react';
 import useLocalStorageManager from '@/hooks/useLocalStorageManager';
+import Link from 'next/link';
 
 export interface SigninData {
   email: string;
   password: string;
 }
 
-const SignupPage = () => {
+const SigninPage = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<SigninData>({
@@ -29,7 +30,7 @@ const SignupPage = () => {
   const [errors, setErrors] = useState<string[]>([]);
 
   const { setItem } = useLocalStorageManager();
-
+  
   useEffect(() => {
     inputRef.current?.focus();
   }, [currentStep])
@@ -69,7 +70,7 @@ const SignupPage = () => {
       // Last step - submit form
       setIsLoading(true);
       
-      try {
+    try {
       const result = await fetch("http://localhost:8080/api/v1/auth/login", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -186,6 +187,9 @@ const SignupPage = () => {
 
           {/* Sign in link */}
           <SignLink currentStep={currentStep} title="You don't have an account?" link='/signup'/>
+          {currentStep > 0 && <Link href="/forgetpassword" className="hover:underline text-base font-medium mt-8 px-2 opacity-80">
+            forget password?
+          </Link>}
         </div>
       </div>
 
@@ -196,4 +200,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default SigninPage;
