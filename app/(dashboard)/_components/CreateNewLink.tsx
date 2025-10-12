@@ -12,6 +12,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import useLocalStorageManager from '@/hooks/useLocalStorageManager'
+import { ShortLink } from '../links/page'
 
 interface LinkFormData {
   link: string
@@ -31,7 +32,7 @@ interface ApiResponse {
   active: boolean
 }
 
-const CreateNewLink = () => {
+const CreateNewLink = ({setLinks}: {setLinks: React.Dispatch<React.SetStateAction<ShortLink[]>>}) => {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<string[]>([])
@@ -95,6 +96,7 @@ const CreateNewLink = () => {
       if (body.message !== "OK") {
         setErrors(Object.values(body.errors));
       } else {
+        setLinks(prev => [...prev, body.data])
         setCreatedLink(body.data)
       }
 

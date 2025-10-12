@@ -1,12 +1,14 @@
 'use client'
 
 import useUser from '@/context/UserContext'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CreateNewLink from '../_components/CreateNewLink';
 import { ChartNoAxesCombined, Earth, MonitorSmartphone } from 'lucide-react';
 import HomeCard from '../_components/HomeCard';
 import CountryVisitorsTable from '../_components/CountryVisitorsTable';
 import ChartPieLabel from '../_components/ChartPieLabel';
+import { ShortLink } from '../links/page';
+import useLocalStorageManager from '@/hooks/useLocalStorageManager';
 
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
@@ -42,28 +44,87 @@ const chartConfig = {
   },
 }
 
-const cardsInfo = [
-  {
-    title: "Total",
-    number: 878,
-  },
-  {
-    title: "Total visitors",
-    number: 878,
-  },
-  {
-    title: "Approved",
-    number: 878,
-  },
-  {
-    title: "Blocked",
-    number: 878,
-  },
-]
+
+export interface StatItem {
+  key: string;
+  count: number;
+}
+
+export interface Totals {
+  totalVisitors: number;
+  totalLinks: number;
+  passed: number;
+  blocked: number;
+}
+
+export interface AnalyticsResponse {
+  total: Totals;
+  byDeviceType: StatItem[];
+  byOs: StatItem[];
+  byCountry: StatItem[];
+  byReferer: StatItem[];
+}
 
 const page = () => {
   
   const { firstName } = useUser();
+  const [links, setLinks] = useState<ShortLink[]>([]);
+  const [errors, setErrors] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [fetchedData, setFetchedData] = useState<AnalyticsResponse>({
+    total: {
+      totalVisitors: 0,
+      totalLinks: 0,
+      passed: 0,
+      blocked: 0,
+    },
+    byDeviceType: [],
+    byOs: [],
+    byCountry: [],
+    byReferer: [],
+  })
+
+  const { getItem } = useLocalStorageManager();
+
+  const fetchData = async () => {
+    // setIsLoading(true)
+     try {
+        // API call
+        const result = await fetch("http://localhost:8080/api/v1/analytics/user/me/all", {
+          method: 'GET',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getItem('accessToken')}`
+          },
+        });
+  
+        if (!result.ok) {
+          if (result.status === 401) {
+            setErrors(["unauthorized"])
+          }
+          else {
+            setErrors(["Error, please try again!"]);
+          }
+          return
+        }
+  
+        const body = await result.json();
+        setFetchedData(body);
+        // if (body.message !== "OK") {
+        //   setErrors(["Error, please try again!"]);
+        // } else {
+        // }
+  
+      } catch (err) {
+        setErrors(["An error occurred, try again"])
+      } finally {
+        setIsLoading(false)
+      }
+  }
+  
+  useEffect(() => {
+    fetchData();
+  }, [])
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-4">
@@ -72,7 +133,7 @@ const page = () => {
           <h1 className="text-4xl font-medium">
             Hello, {firstName}
           </h1>
-          <CreateNewLink />
+          <CreateNewLink setLinks={setLinks}/>
         </div>
 
         {/* Crads */}
@@ -86,14 +147,10 @@ const page = () => {
             </div>
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
-            {cardsInfo.map((card, index) => (
-              <HomeCard key={index} {...card} />
-            ))}
-          </div>
+          <HomeCard {...fetchedData.total} />
         </section>
 
-        {/* Crads */}
+        {/* Visitors Section */}
         <section className='border border-[var(--border-color-white)] dark:border-[var(--border-color-dark)] rounded-xl p-6 sm:p-8 mb-6'>
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
@@ -107,7 +164,7 @@ const page = () => {
           <CountryVisitorsTable />
         </section>
 
-        {/* Devices and software */}
+        {/* Devices and software Section */}
         <section className='border border-[var(--border-color-white)] dark:border-[var(--border-color-dark)] rounded-xl p-6 sm:p-8 mb-6'>
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">

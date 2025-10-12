@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { Search, Check, Trash2 } from 'lucide-react';
+import { Search, Check, Trash2, AlertCircle } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -55,6 +55,12 @@ export interface PaginationData {
   totalPages: number;
 }
 
+export interface formDataType {
+  description: string;
+  name: string;
+  isActive: boolean;
+}
+
 export default function ShortLinksDataTable() {
   const [links, setLinks] = useState<ShortLink[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,16 +73,15 @@ export default function ShortLinksDataTable() {
   const [copied, setCopied] = useState<number | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [passwordFilter, setPasswordFilter] = useState<string>('all');
+  const [errors, setErrors] = useState<string[]>([]);
+  const [editErrors, setEditErrors] = useState<string[]>([]);
+  const [deleteErrors, setDeleteErrors] = useState<string[]>([]);
   const [pagination, setPagination] = useState<PaginationData>({
     pageNo: 0,
-    pageSize: 10,
+    pageSize: 4,
     totalElements: 0,
     totalPages: 0,
   });
-  // const [linkPagination, setLinkPagination] = useState<{pageSize: number; pageNo: number}>({
-  //   pageSize: 10,
-  //   pageNo: 0,
-  // });
 
   const { getItem } = useLocalStorageManager();
   
@@ -85,8 +90,6 @@ export default function ShortLinksDataTable() {
   const fetchLinks = async (pageNo: number, pageSize: number) => {
     setLoading(true);
     try {
-      // Simulating API call
-      // await new Promise(resolve => setTimeout(resolve, 1000));
       const result = await fetch(`http://localhost:8080/api/v1/users/me/short-link/all?pageSize=${pageSize}&pageNo=${pageNo}`, {
         method: 'GET',
         headers: { 
@@ -95,37 +98,23 @@ export default function ShortLinksDataTable() {
       });
 
       if (!result.ok) {
-        // 
+        setErrors(["Error fetching links, please try again"]);
         return
       }
 
       const body = await result.json();
       
-      // Mock data
-      // const mockData = Array.from({ length: 25 }, (_, i) => ({
-      //   id: i + 1,
-      //   linkId: `${Math.random().toString(36).substr(2, 8)}`,
-      //   link: `https://example.com/link${i + 1}`,
-      //   expirationDate: i % 3 === 0 ? '2025-12-31T23:59:59Z' : null,
-      //   name: `Link ${i + 1}`,
-      //   description: `Description ${i + 1}`,
-      //   password: i % 2 === 0 ? null : 'protected',
-      //   active: i % 3 !== 0,
-      // }));
+      const data = body.data;
 
-      const start = pageNo * pageSize;
-      const end = start + pageSize;
-      const paginatedData = mockData.slice(start, end);
-
-      setLinks(paginatedData);
+      setLinks(data);
       setPagination({
         pageNo,
         pageSize,
-        totalElements: mockData.length,
-        totalPages: Math.ceil(mockData.length / pageSize),
+        totalElements: body.totalElements,
+        totalPages: body.totalPages,
       });
     } catch (error) {
-      console.error('Error fetching links:', error);
+      setErrors(['Error fetching links, please try again']);
     } finally {
       setLoading(false);
     }
@@ -146,20 +135,58 @@ export default function ShortLinksDataTable() {
 
   const confirmDelete = async () => {
     if (linkToDelete) {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // API call
+      try {
+      const result = await fetch(`http://localhost:8080/api/v1/users/me/short-link/delete`, {
+        method: 'DELETE',
+        headers: { 
+          'Authorization': `Bearer ${getItem('accessToken')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify([linkToDelete.id]),
+      });
+
+      if (!result.ok) {
+        setDeleteErrors(["Error, please try again"]);
+        return
+      }
+      
       setLinks(links.filter(l => l.id !== linkToDelete.id));
       setDeleteDialogOpen(false);
       setLinkToDelete(null);
+    } catch (error) {
+      setDeleteErrors(['Error, please try again']);}
+    // } finally {
+    //   setLoading(false);
+    // }
     }
   };
 
   const handleBulkDelete = async () => {
     if (selectedLinks.length > 0) {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setLinks(links.filter(l => !selectedLinks.includes(l.id)));
-      setSelectedLinks([]);
+      // API call
+      try {
+        const result = await fetch(`http://localhost:8080/api/v1/users/me/short-link/delete`, {
+          method: 'DELETE',
+          headers: { 
+            'Authorization': `Bearer ${getItem('accessToken')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(selectedLinks),
+        });
+
+        if (!result.ok) {
+          setErrors(["Error, please try again"]);
+          return
+        }
+
+        setLinks(links.filter(l => !selectedLinks.includes(l.id)));
+        setSelectedLinks([]);
+      } catch (error) {
+        setErrors(['Error, please try again']);}
+      // } finally {
+      //   setLoading(false);
+      // }
     }
   };
 
@@ -168,19 +195,43 @@ export default function ShortLinksDataTable() {
     setEditDialogOpen(true);
   };
 
-  const handleSaveEdit = async (id: number, formData: any) => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 500));
-    setLinks(links.map(l => 
-      l.id === id 
-        ? { ...l, name: formData.name, description: formData.description, active: formData.isActive }
-        : l
-    ));
-    setEditDialogOpen(false);
+  const handleSaveEdit = async (id: number, formData: formDataType) => {
+    // API call
+    try {
+      const result = await fetch(`http://localhost:8080/api/v1/users/me/short-link/${id}/update`, {
+        method: 'PUT',
+        headers: { 
+          'Authorization': `Bearer ${getItem('accessToken')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!result.ok) {
+        setEditErrors(["Error, please try again"]);
+        return
+      }
+
+      const body = await result.json();
+      
+      const data = body.data;
+      
+      setLinks(links.map(l => 
+        l.id === id 
+          ? { ...l, name: data.name, description: data.description, active: data.active }
+          : l
+      ));
+      setEditDialogOpen(false);
+    } catch (error) {
+      setEditErrors(['Error, please try again']);}
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   const handleCopy = (link: ShortLink) => {
-    const shortLink = `https://short.link/${link.linkId}`;
+    const hostname: string = window.location.hostname;
+    const shortLink = `${hostname}:3000/r/${link.linkId}`;
     navigator.clipboard.writeText(shortLink);
     setCopied(link.id);
     setTimeout(() => setCopied(null), 2000);
@@ -227,7 +278,7 @@ export default function ShortLinksDataTable() {
             <div className="text-4xl font-medium">Links</div>
             <div className="text-lg font-normal opacity-80">Shorten, share, and track your links in seconds.</div>
           </div>
-          <CreateNewLink />
+          <CreateNewLink setLinks={setLinks}/>
         </div>
         {/* Filters and Search */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -280,6 +331,18 @@ export default function ShortLinksDataTable() {
             )}
           </div>
         </div>
+
+        {/* Error Alert */}
+        {errors.length > 0 && (
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-800 rounded-lg flex flex-col gap-3">
+            {errors.map((error, index) => (
+              <div key={index} className='flex items-start gap-3'>
+                <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Table */}
         <div className="rounded-xl border border-[var(--border-color-white)] dark:border-[var(--border-color-dark)]">
@@ -376,6 +439,17 @@ export default function ShortLinksDataTable() {
                 This action cannot be undone. This will permanently delete the short link
                 {linkToDelete && ` "${linkToDelete.name}"`}.
               </AlertDialogDescription>
+              {/* Error Alert */}
+              {deleteErrors.length > 0 && (
+                <div className="mt-6 p-4 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-800 rounded-lg flex flex-col gap-3">
+                  {deleteErrors.map((error, index) => (
+                    <div key={index} className='flex items-start gap-3'>
+                      <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm text-red-800 dark:text-red-300">{error}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </AlertDialogHeader>
             <AlertDialogFooter>
               <div onClick={() => setDeleteDialogOpen(false)}>
@@ -406,6 +480,7 @@ export default function ShortLinksDataTable() {
             open={editDialogOpen}
             onOpenChange={setEditDialogOpen}
             onSave={handleSaveEdit}
+            editErrors={editErrors}
           />
         )}
 

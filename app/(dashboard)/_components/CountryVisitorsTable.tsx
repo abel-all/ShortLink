@@ -9,80 +9,46 @@ import {
 } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Telescope } from 'lucide-react';
+import { StatItem } from '../home/page';
+import useLocalStorageManager from '@/hooks/useLocalStorageManager';
 
-interface CountryVisitor {
-  country: string;
-  visitors: number;
-}
+// interface CountryVisitor {
+//   country: string;
+//   visitors: number;
+// }
 
-const countryNameToFlag = (countryName: string): string => {
-  const countryCodes: { [key: string]: string } = {
-    'United States': 'US',
-    'United Kingdom': 'GB',
-    'Germany': 'DE',
-    'France': 'FR',
-    'Canada': 'CA',
-    'Australia': 'AU',
-    'Japan': 'JP',
-    'Brazil': 'BR',
-    'India': 'IN',
-    'Spain': 'ES',
-    'Italy': 'IT',
-    'Netherlands': 'NL',
-    'Mexico': 'MX',
-    'South Korea': 'KR',
-    'Russia': 'RU',
-    'Switzerland': 'CH',
-    'Sweden': 'SE',
-    'Poland': 'PL',
-    'Belgium': 'BE',
-    'Argentina': 'AR',
-  };
+const countryNameToFlag = (key: string): string => {
+  // const countryCodes: { [key: string]: string } = {
+  //   'United States': 'US',
+  //   'United Kingdom': 'GB',
+  //   'Germany': 'DE',
+  //   'France': 'FR',
+  //   'Canada': 'CA',
+  //   'Australia': 'AU',
+  //   'Japan': 'JP',
+  //   'Brazil': 'BR',
+  //   'India': 'IN',
+  //   'Spain': 'ES',
+  //   'Italy': 'IT',
+  //   'Netherlands': 'NL',
+  //   'Mexico': 'MX',
+  //   'South Korea': 'KR',
+  //   'Russia': 'RU',
+  //   'Switzerland': 'CH',
+  //   'Sweden': 'SE',
+  //   'Poland': 'PL',
+  //   'Belgium': 'BE',
+  //   'Argentina': 'AR',
+  // };
 
-  const code = countryCodes[countryName];
-  if (!code) return '🏳️';
+  // const code = countryCodes[countryName];
+  // if (!code) return '🏳️';
 
-  const codePoints = code
+  const codePoints = key
     .toUpperCase()
     .split('')
     .map(char => 127397 + char.charCodeAt(0));
   return String.fromCodePoint(...codePoints);
-};
-
-// Simulated API call
-const fetchCountryVisitors = (): Promise<CountryVisitor[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const data: CountryVisitor[] = [
-        { country: 'United States', visitors: 45230 },
-        { country: 'United Kingdom', visitors: 28450 },
-        { country: 'Germany', visitors: 19800 },
-        { country: 'France', visitors: 15670 },
-        { country: 'Canada', visitors: 12340 },
-        { country: 'Australia', visitors: 9850 },
-        { country: 'Japan', visitors: 8670 },
-        { country: 'Brazil', visitors: 4340 },
-        { country: 'India', visitors: 3890 },
-        { country: 'Spain', visitors: 3250 },
-        { country: 'Italy', visitors: 2980 },
-        { country: 'Netherlands', visitors: 2650 },
-        { country: 'Mexico', visitors: 2340 },
-        { country: 'South Korea', visitors: 2120 },
-        { country: 'Russia', visitors: 1890 },
-        { country: 'Switzerland', visitors: 1670 },
-        { country: 'Sweden', visitors: 1450 },
-        { country: 'Poland', visitors: 1280 },
-        { country: 'Belgium', visitors: 1120 },
-        { country: 'Morocco', visitors: 980 },
-      ]
-      .sort((a, b) => b.visitors - a.visitors);
-      
-      // Uncomment to test empty state
-      // resolve([]);
-      
-      resolve(data);
-    }, 1500);
-  });
 };
 
 const TableSkeleton = () => {
@@ -109,24 +75,70 @@ const TableSkeleton = () => {
 };
 
 const CountryVisitorsTable = () => {
-  const [data, setData] = useState<CountryVisitor[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState<StatItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const {getItem} = useLocalStorageManager();
+
+  const fetchCountryVisitors = async () => {
+    setIsLoading(true);
+  try {
+    // API call
+    const result = await fetch("http://localhost:8080/api/v1/analytics/user/me/country", {
+      method: 'GET',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getItem('accessToken')}`
+      },
+    });
+
+    if (!result.ok) {
+      if (result.status === 401) {
+        // setErrors(["unauthorized"])
+        setData([]);
+      }
+      else {
+        // setErrors(["Error, please try again!"]);
+        setData([]);
+      }
+      return
+    }
+
+    const body = await result.json();
+
+    setData(body);
+    // if (body.message !== "OK") {
+    //   setErrors(["Error, please try again!"]);
+    // } else {
+    // }
+  
+    } catch (err) {
+      // setErrors(["An error occurred, try again"])
+      setData([]);
+    } finally {
+      setIsLoading(false)
+    }
+};
 
   useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      try {
-        const result = await fetchCountryVisitors();
-        setData(result);
-      } catch (error) {
-        console.error('Failed to fetch data:', error);
-        setData([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    // const loadData = async () => {
+    //   setIsLoading(true);
+    //   try {
+    //     const result = await fetchCountryVisitors();
+    //     setData(result);
+    //   } catch (error) {
+    //     console.error('Failed to fetch data:', error);
+    //     setData([]);
+    //   } finally {
+    //     }
 
-    loadData();
+    //   setData(byCountry)      
+
+    //   setIsLoading(false);
+    // };
+
+
+    fetchCountryVisitors();
   }, []);
 
   const formatNumber = (num: number) => {
@@ -160,7 +172,7 @@ const CountryVisitorsTable = () => {
             ) : (
               data.map((item, index) => (
                 <TableRow 
-                  key={item.country} 
+                  key={item.key} 
                   className="hover:bg-blue-50/30 dark:hover:bg-blue-50/10 transition-colors border-gray-200 dark:border-gray-800"
                 >
                   <TableCell className="text-base font-light">
@@ -168,12 +180,12 @@ const CountryVisitorsTable = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2 md:gap-3">
-                      <span className="text-xl md:text-2xl">{countryNameToFlag(item.country)}</span>
-                      <span className="text-sm md:text-base font-light">{item.country}</span>
+                      <span className="text-xl md:text-2xl">{countryNameToFlag(item.key)}</span>
+                      <span className="text-sm md:text-base font-light">{item.key}</span>
                     </div>
                   </TableCell>
                   <TableCell className="text-right font-normal text-sm md:text-base">
-                    {formatNumber(item.visitors)}
+                    {formatNumber(item.count)}
                   </TableCell>
                 </TableRow>
               ))
