@@ -9,7 +9,7 @@ const CustomCardBenifit = ({Icon, title, description}: benefitsObjectProps) => {
             <Icon />
             <div className="flex text-base flex-col justify-center">
             <div className="font-bold">{title}</div>
-            <div className="font-normal">{description}</div>
+            <div className="font-normal opacity-90">{description}</div>
             </div>
         </div>
         </div>

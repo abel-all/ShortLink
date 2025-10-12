@@ -3,12 +3,13 @@
 import useUser from '@/context/UserContext'
 import React, { useEffect, useState } from 'react'
 import CreateNewLink from '../_components/CreateNewLink';
-import { ChartNoAxesCombined, Earth, MonitorSmartphone } from 'lucide-react';
+import { AlertCircle, ChartNoAxesCombined, Earth, MonitorSmartphone } from 'lucide-react';
 import HomeCard from '../_components/HomeCard';
 import CountryVisitorsTable from '../_components/CountryVisitorsTable';
 import ChartPieLabel from '../_components/ChartPieLabel';
 import { ShortLink } from '../links/page';
 import useLocalStorageManager from '@/hooks/useLocalStorageManager';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
@@ -24,11 +25,11 @@ const chartConfig = {
   },
   chrome: {
     label: "Chrome",
-    color: "var(--chart-1)",
+    color: "#00ff00",
   },
   safari: {
     label: "Safari",
-    color: "var(--chart-2)",
+    color: "#ff0000",
   },
   firefox: {
     label: "Firefox",
@@ -110,10 +111,6 @@ const page = () => {
   
         const body = await result.json();
         setFetchedData(body);
-        // if (body.message !== "OK") {
-        //   setErrors(["Error, please try again!"]);
-        // } else {
-        // }
   
       } catch (err) {
         setErrors(["An error occurred, try again"])
@@ -147,7 +144,20 @@ const page = () => {
             </div>
           </div>
 
-          <HomeCard {...fetchedData.total} />
+          {isLoading ? (<div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+            {[...Array(4)].map((_, index) => (
+                <Skeleton key={index} className="h-40 rounded-lg w-full" />
+            ))}
+          </div>) : 
+          errors.length > 0 ? 
+            (<div className='rounded-xl w-full h-[160px] mb-6 bg-red-50 dark:bg-red-900/40 flex flex-col gap-2 items-center justify-center'>
+              <AlertCircle className="h-10 w-10 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+              {errors.map((error, index) => (
+                <div key={index} className='text-base text-red-800 dark:text-red-300'>
+                  {error}
+                </div>
+              ))}
+            </div>) : (<HomeCard {...fetchedData.total} />)}
         </section>
 
         {/* Visitors Section */}

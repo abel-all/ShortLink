@@ -8,42 +8,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Telescope } from 'lucide-react';
+import { AlertCircle, Telescope } from 'lucide-react';
 import { StatItem } from '../home/page';
 import useLocalStorageManager from '@/hooks/useLocalStorageManager';
 
-// interface CountryVisitor {
-//   country: string;
-//   visitors: number;
-// }
-
 const countryNameToFlag = (key: string): string => {
-  // const countryCodes: { [key: string]: string } = {
-  //   'United States': 'US',
-  //   'United Kingdom': 'GB',
-  //   'Germany': 'DE',
-  //   'France': 'FR',
-  //   'Canada': 'CA',
-  //   'Australia': 'AU',
-  //   'Japan': 'JP',
-  //   'Brazil': 'BR',
-  //   'India': 'IN',
-  //   'Spain': 'ES',
-  //   'Italy': 'IT',
-  //   'Netherlands': 'NL',
-  //   'Mexico': 'MX',
-  //   'South Korea': 'KR',
-  //   'Russia': 'RU',
-  //   'Switzerland': 'CH',
-  //   'Sweden': 'SE',
-  //   'Poland': 'PL',
-  //   'Belgium': 'BE',
-  //   'Argentina': 'AR',
-  // };
-
-  // const code = countryCodes[countryName];
-  // if (!code) return '🏳️';
-
   const codePoints = key
     .toUpperCase()
     .split('')
@@ -77,6 +46,7 @@ const TableSkeleton = () => {
 const CountryVisitorsTable = () => {
   const [data, setData] = useState<StatItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<string[]>([]);
 
   const {getItem} = useLocalStorageManager();
 
@@ -94,12 +64,12 @@ const CountryVisitorsTable = () => {
 
     if (!result.ok) {
       if (result.status === 401) {
-        // setErrors(["unauthorized"])
-        setData([]);
+        setErrors(["unauthorized"])
+        // setData([]);
       }
       else {
-        // setErrors(["Error, please try again!"]);
-        setData([]);
+        setErrors(["Error, please try again!"]);
+        // setData([]);
       }
       return
     }
@@ -107,37 +77,17 @@ const CountryVisitorsTable = () => {
     const body = await result.json();
 
     setData(body);
-    // if (body.message !== "OK") {
-    //   setErrors(["Error, please try again!"]);
-    // } else {
-    // }
+
   
     } catch (err) {
-      // setErrors(["An error occurred, try again"])
-      setData([]);
+      setErrors(["An error occurred, try again"])
+      // setData([]);
     } finally {
       setIsLoading(false)
     }
 };
 
   useEffect(() => {
-    // const loadData = async () => {
-    //   setIsLoading(true);
-    //   try {
-    //     const result = await fetchCountryVisitors();
-    //     setData(result);
-    //   } catch (error) {
-    //     console.error('Failed to fetch data:', error);
-    //     setData([]);
-    //   } finally {
-    //     }
-
-    //   setData(byCountry)      
-
-    //   setIsLoading(false);
-    // };
-
-
     fetchCountryVisitors();
   }, []);
 
@@ -147,7 +97,15 @@ const CountryVisitorsTable = () => {
 
   return (
     <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
-      <div className="max-h-[540px] overflow-y-auto px-6">
+      {errors.length > 0 ? 
+      (<div className='w-full h-80 bg-red-50 dark:bg-red-900/40 flex flex-col gap-2 items-center justify-center'>
+        <AlertCircle className="h-10 w-10 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+        {errors.map((error, index) => (
+          <div key={index} className='text-base text-red-800 dark:text-red-300'>
+            {error}
+          </div>
+        ))}
+      </div>) : (<div className="max-h-[540px] overflow-y-auto px-6">
         <Table>
           <TableHeader>
             <TableRow className='text-lg font-medium h-14'>
@@ -192,7 +150,7 @@ const CountryVisitorsTable = () => {
             )}
           </TableBody>
         </Table>
-      </div>
+      </div>)}
     </div>
   );
 }
