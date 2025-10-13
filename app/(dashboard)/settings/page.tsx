@@ -46,7 +46,7 @@ const SettingsPage = () => {
     setSuccess(null);
 
     try {
-      const result = await fetch("http://localhost:8080/api/v1/users/me/update-info", {
+      const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/me/update-info`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ const SettingsPage = () => {
     }
 
     try {
-      const result = await fetch("http://localhost:8080/api/v1/users/me/update-password", {
+      const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/me/update-password`, {
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',

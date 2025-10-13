@@ -17,7 +17,7 @@ const ProtectedRouteWrapper = ({ children }: { children: React.ReactNode }) => {
     
     const fetchUserData = async () => {
       try {
-        const result = await fetch('http://localhost:8080/api/v1/users/me', {
+        const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/me`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

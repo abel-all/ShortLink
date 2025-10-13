@@ -90,7 +90,7 @@ export default function ShortLinksDataTable() {
   const fetchLinks = async (pageNo: number, pageSize: number) => {
     setLoading(true);
     try {
-      const result = await fetch(`http://localhost:8080/api/v1/users/me/short-link/all?pageSize=${pageSize}&pageNo=${pageNo}`, {
+      const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/me/short-link/all?pageSize=${pageSize}&pageNo=${pageNo}`, {
         method: 'GET',
         headers: { 
           'Authorization': `Bearer ${getItem('accessToken')}`
@@ -137,7 +137,7 @@ export default function ShortLinksDataTable() {
     if (linkToDelete) {
       // API call
       try {
-      const result = await fetch(`http://localhost:8080/api/v1/users/me/short-link/delete`, {
+      const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/me/short-link/delete`, {
         method: 'DELETE',
         headers: { 
           'Authorization': `Bearer ${getItem('accessToken')}`,
@@ -166,7 +166,7 @@ export default function ShortLinksDataTable() {
     if (selectedLinks.length > 0) {
       // API call
       try {
-        const result = await fetch(`http://localhost:8080/api/v1/users/me/short-link/delete`, {
+        const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/me/short-link/delete`, {
           method: 'DELETE',
           headers: { 
             'Authorization': `Bearer ${getItem('accessToken')}`,
@@ -198,7 +198,7 @@ export default function ShortLinksDataTable() {
   const handleSaveEdit = async (id: number, formData: formDataType) => {
     // API call
     try {
-      const result = await fetch(`http://localhost:8080/api/v1/users/me/short-link/${id}/update`, {
+      const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/me/short-link/${id}/update`, {
         method: 'PUT',
         headers: { 
           'Authorization': `Bearer ${getItem('accessToken')}`,

@@ -76,7 +76,7 @@ const CreateNewLink = ({setLinks}: {setLinks: React.Dispatch<React.SetStateActio
 
     try {
       // API call
-      const result = await fetch("http://localhost:8080/api/v1/users/me/short-link/create", {
+      const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/users/me/short-link/create`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

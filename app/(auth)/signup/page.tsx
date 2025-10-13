@@ -72,7 +72,7 @@ const SignupPage = () => {
     setIsLoading(true);
     
     try {
-      const result = await fetch("http://localhost:8080/api/v1/auth/register", {
+      const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

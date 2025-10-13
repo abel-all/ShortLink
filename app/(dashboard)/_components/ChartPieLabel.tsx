@@ -25,8 +25,8 @@ const ChartPieLabel = ({title}: Props) => {
 
   const fetchData = async () => {
     const endpoint = title === "Devices" ?
-                    "http://localhost:8080/api/v1/analytics/user/me/device-type" :
-                    "http://localhost:8080/api/v1/analytics/user/me/os";
+                    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/analytics/user/me/device-type` :
+                    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/analytics/user/me/os`;
 
     setIsLoading(true);
     try {

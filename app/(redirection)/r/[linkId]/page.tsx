@@ -25,7 +25,7 @@ const page = () => {
     
     const fetchUrldata = async (source: string) => {
 
-        const result = await fetch(`http://localhost:8080/api/v1/short-link/url?id=${params.linkId}`, {
+        const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/short-link/url?id=${params.linkId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -66,7 +66,7 @@ const page = () => {
 
         const checkPassword = async () => {
             try {
-              const result = await fetch(`http://localhost:8080/api/v1/short-link/has-password?id=${params.linkId}`, {
+              const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/short-link/has-password?id=${params.linkId}`, {
                 method: 'GET',
               });
 

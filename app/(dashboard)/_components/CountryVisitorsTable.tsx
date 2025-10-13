@@ -54,7 +54,7 @@ const CountryVisitorsTable = () => {
     setIsLoading(true);
   try {
     // API call
-    const result = await fetch("http://localhost:8080/api/v1/analytics/user/me/country", {
+    const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/analytics/user/me/country`, {
       method: 'GET',
       headers: { 
         'Content-Type': 'application/json',

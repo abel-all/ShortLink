@@ -71,7 +71,7 @@ const SigninPage = () => {
       setIsLoading(true);
       
     try {
-      const result = await fetch("http://localhost:8080/api/v1/auth/login", {
+      const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

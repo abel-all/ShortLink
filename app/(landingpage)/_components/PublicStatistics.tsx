@@ -28,7 +28,7 @@ const PublicStatistics = () => {
 
     const fetchData = async () => {
         try {
-        const result = await fetch("http://localhost:8080/api/v1/public/total", {
+        const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/public/total`, {
             method: 'GET',
         });
       
