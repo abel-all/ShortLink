@@ -109,7 +109,7 @@ const HelpPage = () => {
               </div>
               <div>
                 <div className="text-sm font-medium opacity-80">Phone</div>
-                <div className="mt-1 text-lg font-medium">+1 (555) 123-4567</div>
+                <div className="mt-1 md:text-lg text-sm font-medium">+1 (555) 123-4567</div>
               </div>
             </div>
 
@@ -120,7 +120,7 @@ const HelpPage = () => {
               </div>
               <div>
                 <div className="text-sm font-medium opacity-80">Email</div>
-                <div className="mt-1 text-lg font-medium">support@company.com</div>
+                <div className="mt-1 md:text-lg text-sm font-medium">support@company.com</div>
               </div>
             </div>
 
@@ -131,7 +131,7 @@ const HelpPage = () => {
               </div>
               <div>
                 <div className="text-sm font-medium opacity-80">Address</div>
-                <div className="mt-1 text-lg font-medium">123 Business Ave</div>
+                <div className="mt-1 md:text-lg text-sm font-medium">123 Business Ave</div>
                 <div className="opacity-80">New York, NY 10001</div>
               </div>
             </div>

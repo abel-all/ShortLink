@@ -82,6 +82,12 @@ const getClientInfo = async (): Promise<ClientInfo> => {
 
   const ipAddress = await fetchPublicIp();
 
+  console.log("infos : ", operatingSystem,
+    deviceType,
+    timeZone,
+    referer,
+    ipAddress,)
+
   return {
     operatingSystem,
     deviceType,

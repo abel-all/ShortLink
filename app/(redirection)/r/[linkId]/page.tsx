@@ -4,31 +4,20 @@ import { useParams } from 'next/navigation';
 import { CircleX, Dot, LockKeyhole, SearchX } from 'lucide-react';
 import Button from '@/components/Button';
 import LoaderOntop from '@/components/LoaderOnTop';
-import getClientInfo, { DeviceType } from '@/lib/getClientinfo';
-
-interface dataTypes {
-    operatingSystem: string,
-    deviceType: DeviceType,
-    timeZone: string | null,
-    password: string,
-    ipAddress: string | null,
-    referer: string | null,
-    trustToken: string
-}
+import getClientInfo, { ClientInfo, DeviceType } from '@/lib/getClientinfo';
 
 const page = () => {
 
     const [errors, setErrors] = useState<string[]>([]);
-    const [error, setError] = useState("");
-    const [formData, setFormData] = useState<dataTypes>({
+    const [error, setError] = useState("error");
+    const [clientInfo, setClientInfo] = useState<ClientInfo>({
       operatingSystem: 'Unknown',
-      deviceType: 'mobile',
+      deviceType: 'Mobile',
       timeZone: 'Unknown',
-      password: 'Unknown',
       ipAddress: '223.240.160.251',
-      referer: 'Unknown',
-      trustToken: 'Unknown'
+      referer: 'http://unknown.com',
     });
+    const [password, setPassword] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isFetching, setIsFetching] = useState(true);
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -39,7 +28,11 @@ const page = () => {
         const result = await fetch(`http://localhost:8080/api/v1/short-link/url?id=${params.linkId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({
+              ...clientInfo,
+              trustToken: "Unknown",
+              password: password,
+            }),
         });
       
         const body = await result.json();
@@ -50,6 +43,7 @@ const page = () => {
             } else {
                 setErrors(Object.values(body.errors ?? {error: "Error Try Again"}))
             }
+            setIsFetching(false);
             return
         }      
         // Redirect to link
@@ -60,20 +54,15 @@ const page = () => {
       inputRef.current?.focus();
     }, [])
 
-    useEffect(() => {
-      const clientData = async () => {
-        const data = await getClientInfo();
-        setFormData(prev => ({
-          ...prev,
-          ...data,
-        }))
-      }
-
-      clientData();
-    }, [])
+    const clientData = async () => {
+      const data = await getClientInfo();
+      setClientInfo(data);
+    }
 
     useEffect(() => {
         if (!params.linkId) return;
+
+        clientData();
 
         const checkPassword = async () => {
             try {
@@ -85,19 +74,23 @@ const page = () => {
     
               if (body.message !== "OK") {
                 setError(body.data);
+                setIsFetching(false);
               }
 
               if (body.data.hasPassword) {
                 setError("")
+                setIsFetching(false);
               } else {
                 // send req to get url
-                fetchUrldata("checkPass")
+                try {
+                  await fetchUrldata("checkPass");
+                } catch (error) {
+                  setErrors(['Network error — try again']);
+                }
               }
     
             } catch (error) {
               setErrors(['Network error — try again']);
-            } finally {
-              setIsFetching(false);
             }
         }
 
@@ -105,10 +98,7 @@ const page = () => {
     }, [params.linkId])
 
     const handleInputChange = (value: string) => {
-      setFormData(prev => ({
-        ...prev,
-        password: value
-      }));
+      setPassword(value);
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -120,7 +110,7 @@ const page = () => {
     const handleNext = async () => {
       setErrors([])
       
-      if (!formData.password.trim()) {
+      if (!password || !password.trim()) {
         setErrors(['This field is required']);
         return;
       }
